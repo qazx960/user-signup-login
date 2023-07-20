@@ -33,9 +33,9 @@ export const Header = () => {
   return (
     <NavigationBar>
       <NavItems>
-        <div>Home</div>
-        <div>Login</div>
-        <div>Signup</div>
+        <Link>Home</Link>
+        <Link to='/login'>Login</Link>
+        <Link to='/signup'>Signup</Link>
       </NavItems>
     </NavigationBar>
   );
