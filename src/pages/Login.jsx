@@ -1,20 +1,75 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 
+export const Login = ({ login }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [navigate, setNavigate] = useState(false);
 
+  const LOGIN_URL = "https://api.escuelajs.co/api/v1/auth/login";
 
+  // "email": "john@mail.com",
+  // "password": "changeme"
 
-export const Login = ({user}) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    };
+
+    fetch(LOGIN_URL, requestOptions)
+      .then((response) => {
+        if (response.status === 200) {
+          // Alert "LOGIN SUCCESS"
+          alert("Login Success");
+        } else if (response.status === 401) {
+          // Alert "No matching user found"
+          alert("No matching user found");
+        } else if (response.status === 400) {
+          alert("Wrong details");
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        setEmail("");
+        setPassword("");
+        console.log(data);
+        const access = data.access_token;
+        const refresh = data.refresh_token;
+        localStorage.setItem("accessToken", access);
+        localStorage.setItem("refreshToken", refresh);
+      });
+
+    
+  };
 
   return (
     <LoginContainer>
       <h1>Login</h1>
-      <Form>
-        <label htmlFor="username">Username</label>
-        <Input type="text" id="username" />
+      <Form onSubmit={handleSubmit}>
+        <label htmlFor="email">Email</label>
+        <Input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <label htmlFor="password">Password</label>
-        <Input type="password" id="password" />
-        <Button >Login</Button>
+        <Input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button>Login</Button>
       </Form>
     </LoginContainer>
   );
