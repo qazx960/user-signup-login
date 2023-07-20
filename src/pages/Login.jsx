@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { styled } from "styled-components";
+import { Navigate } from "react-router-dom";
 
 export const Login = ({ login }) => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ export const Login = ({ login }) => {
 
   const LOGIN_URL = "https://api.escuelajs.co/api/v1/auth/login";
 
+  //test login
   // "email": "john@mail.com",
   // "password": "changeme"
 
@@ -41,6 +43,7 @@ export const Login = ({ login }) => {
       .then((data) => {
         setEmail("");
         setPassword("");
+        setNavigate(true)
         console.log(data);
         const access = data.access_token;
         const refresh = data.refresh_token;
@@ -50,6 +53,17 @@ export const Login = ({ login }) => {
 
     
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    alert("로그아웃 하셨습니다");
+  };
+
+  if (navigate) {
+    return <Navigate to="/signup" />;
+  }
 
   return (
     <LoginContainer>
@@ -70,6 +84,7 @@ export const Login = ({ login }) => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button>Login</Button>
+        <button onClick={handleLogout}>Logout 임시</button>
       </Form>
     </LoginContainer>
   );
